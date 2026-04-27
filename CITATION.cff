@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: "promptdiff: Lightweight Comparison Utilities for LLM Prompt Strings"
+authors:
+  - family-names: Deshmukh
+    given-names: Vaibhav
+version: 0.1.0
+date-released: "2026-04-27"
+url: "https://github.com/vdeshmukh203/promptdiff"
+repository-code: "https://github.com/vdeshmukh203/promptdiff"
+license: MIT
+keywords:
+  - prompt engineering
+  - large language models
+  - text comparison
+  - diff
+  - similarity
+abstract: >
+  promptdiff is a pure-Python, zero-dependency library for comparing LLM
+  prompt strings. It provides a line-aware structured diff, a unified-diff
+  formatter, and a character-bigram cosine similarity score, together with
+  a Tkinter-based GUI and a command-line interface.
