@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: "promptdiff"
+version: "0.2.0"
+date-released: "2026-04-29"
+url: "https://github.com/vdeshmukh203/promptdiff"
+abstract: >-
+  A pure-Python library for computing and visualising differences between
+  prompt strings.  Provides line-level diff, word-level diff, unified diff
+  formatting, and character-bigram cosine similarity.  Includes an optional
+  Tkinter graphical interface.
+license: MIT
+authors:
+  - family-names: Deshmukh
+    given-names: Vaibhav
