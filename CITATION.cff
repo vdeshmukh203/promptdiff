@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: promptdiff
+version: 0.1.0
+date-released: 2026-04-25
+authors:
+  - family-names: Deshmukh
+    given-names: Vaibhav
+    orcid: https://orcid.org/0000-0000-0000-0000
+repository-code: https://github.com/vdeshmukh203/promptdiff
+license: MIT
+abstract: >
+  Pure-Python library for computing structured diffs and cosine similarity
+  scores between LLM prompt strings.
+keywords:
+  - large language models
+  - prompt engineering
+  - diff
+  - similarity
