@@ -1,20 +1,26 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: promptdiff
-version: 0.1.0
-date-released: 2026-04-25
+title: "promptdiff: A Pure-Python Library for Structured Comparison of LLM Prompt Strings"
+version: 0.2.0
+date-released: 2026-05-05
 authors:
   - family-names: Deshmukh
     given-names: Vaibhav
     orcid: https://orcid.org/0000-0000-0000-0000
 repository-code: https://github.com/vdeshmukh203/promptdiff
+url: https://github.com/vdeshmukh203/promptdiff
 license: MIT
 abstract: >
   Pure-Python library for computing structured diffs and cosine similarity
-  scores between LLM prompt strings.
+  scores between LLM prompt strings. Provides a line-aware diff function
+  returning (op, line) tuples, a unified diff formatter, and a
+  character-bigram cosine similarity metric, all using only the Python
+  standard library. Includes an optional tkinter-based graphical interface.
 keywords:
   - large language models
   - prompt engineering
   - diff
   - similarity
+  - natural language processing
+  - python
