@@ -4,22 +4,42 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "promptdiff"
-version = "0.1.0"
+version = "0.2.0"
 description = "Compute and format diffs between prompt strings"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Vaibhav Deshmukh"}]
-keywords = ["python", "prompt", "diff", "templates"]
+keywords = ["python", "prompt", "diff", "llm", "similarity", "templates"]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Topic :: Text Processing",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+promptdiff-gui = "promptdiff.gui:run"
 
 [project.urls]
 "Homepage" = "https://github.com/vdeshmukh203/promptdiff"
 "Source" = "https://github.com/vdeshmukh203/promptdiff"
+"Bug Tracker" = "https://github.com/vdeshmukh203/promptdiff/issues"
+"Changelog" = "https://github.com/vdeshmukh203/promptdiff/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short"
