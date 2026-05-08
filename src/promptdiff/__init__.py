@@ -11,21 +11,47 @@ from __future__ import annotations
 import difflib
 import math
 from collections import Counter
-from typing import List, Tuple
+from typing import List, Literal, Tuple
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = ["diff", "format_unified", "similarity"]
 
+# Type for the operation tag in diff output tuples.
+Op = Literal["equal", "add", "remove"]
 
-def diff(a: str, b: str) -> list:
+
+def diff(a: str, b: str) -> List[Tuple[Op, str]]:
     """Return a line-aware diff between two strings.
 
-    The result is a list of two-tuples of the form (op, line) where op is
-    one of equal, add, or remove and line is the corresponding line.
-    Trailing newlines are preserved on each line so that callers can
-    re-concatenate the lines without losing structure. A replace region
-    is expanded into a sequence of remove entries followed by add entries
+    The result is a list of two-tuples ``(op, line)`` where *op* is one of
+    ``"equal"``, ``"add"``, or ``"remove"`` and *line* is the corresponding
+    text line.  Trailing newlines are preserved on each line so callers can
+    re-concatenate without losing structure.  A replace region is expanded
+    into a sequence of ``"remove"`` entries followed by ``"add"`` entries,
     so the caller does not need to handle a separate replace op.
+
+    Parameters
+    ----------
+    a : str
+        The original prompt string.
+    b : str
+        The revised prompt string.
+
+    Returns
+    -------
+    list of (str, str)
+        Sequence of ``(op, line)`` pairs describing the edit script.
+
+    Raises
+    ------
+    TypeError
+        If either argument is not a :class:`str`.
+
+    Examples
+    --------
+    >>> ops = diff("hello\\nworld\\n", "hello\\nthere\\n")
+    >>> [op for op, _ in ops]
+    ['equal', 'remove', 'add']
     """
     if not isinstance(a, str) or not isinstance(b, str):
         raise TypeError("diff expects two strings")
@@ -33,7 +59,7 @@ def diff(a: str, b: str) -> list:
     a_lines = a.splitlines(keepends=True)
     b_lines = b.splitlines(keepends=True)
     matcher = difflib.SequenceMatcher(a=a_lines, b=b_lines)
-    out: List[Tuple[str, str]] = []
+    out: List[Tuple[Op, str]] = []
     for tag, i1, i2, j1, j2 in matcher.get_opcodes():
         if tag == "equal":
             for line in a_lines[i1:i2]:
@@ -56,9 +82,33 @@ def format_unified(a: str, b: str) -> str:
     """Return a unified diff string comparing two prompt strings.
 
     The output follows the standard unified diff format produced by
-    difflib with header labels of a and b. Lines in the input that do not
-    end with a newline have one appended so the output is well-formed.
-    When the two inputs are identical, the result is the empty string.
+    :func:`difflib.unified_diff` with header labels ``a`` and ``b``.
+    Lines that do not end with a newline have one appended so the output
+    is well-formed.  When the two inputs are identical, the result is the
+    empty string.
+
+    Parameters
+    ----------
+    a : str
+        The original prompt string.
+    b : str
+        The revised prompt string.
+
+    Returns
+    -------
+    str
+        A unified diff string, or an empty string when *a* and *b* are equal.
+
+    Raises
+    ------
+    TypeError
+        If either argument is not a :class:`str`.
+
+    Examples
+    --------
+    >>> out = format_unified("hello\\nworld\\n", "hello\\nthere\\n")
+    >>> "-world" in out and "+there" in out
+    True
     """
     if not isinstance(a, str) or not isinstance(b, str):
         raise TypeError("format_unified expects two strings")
@@ -81,13 +131,49 @@ def _bigrams(s: str) -> Counter:
 def similarity(a: str, b: str) -> float:
     """Return the cosine similarity of character bigrams in two strings.
 
-    The result is a float in the closed interval from 0.0 to 1.0. Two
-    identical strings produce 1.0 and two strings with no shared bigrams
-    produce 0.0. Empty inputs are handled as a special case: two empty
-    strings are considered identical and return 1.0, while a single empty
-    string compared to any non-empty string returns 0.0. Strings of length
-    one share no bigrams with anything and therefore behave like the empty
-    case unless they match exactly.
+    The result is a float in the closed interval ``[0.0, 1.0]``.  Two
+    identical strings produce ``1.0`` and two strings with no shared bigrams
+    produce ``0.0``.  Empty inputs are handled as a special case: two empty
+    strings return ``1.0``, while one empty and one non-empty string return
+    ``0.0``.  Single-character strings share no bigrams with anything and
+    therefore return ``0.0`` unless they match exactly.
+
+    The score is computed as the cosine similarity of character-bigram
+    frequency vectors:
+
+    .. math::
+
+        \\text{similarity}(a, b) =
+        \\frac{\\mathbf{v}_a \\cdot \\mathbf{v}_b}
+             {\\|\\mathbf{v}_a\\| \\, \\|\\mathbf{v}_b\\|}
+
+    where :math:`\\mathbf{v}_s[k]` counts occurrences of bigram *k* in *s*.
+
+    Parameters
+    ----------
+    a : str
+        The first prompt string.
+    b : str
+        The second prompt string.
+
+    Returns
+    -------
+    float
+        Cosine similarity score in ``[0.0, 1.0]``.
+
+    Raises
+    ------
+    TypeError
+        If either argument is not a :class:`str`.
+
+    Examples
+    --------
+    >>> similarity("hello world", "hello world")
+    1.0
+    >>> similarity("aaaa", "bbbb")
+    0.0
+    >>> 0.0 < similarity("hello world", "hello there") < 1.0
+    True
     """
     if not isinstance(a, str) or not isinstance(b, str):
         raise TypeError("similarity expects two strings")
